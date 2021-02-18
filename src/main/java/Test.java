@@ -1,31 +1,40 @@
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import org.junit.Assert;
+
+import java.time.YearMonth;
 
 public class Test {
-    private final static int NUM_ELEMENTS = 1000;
-    private final static int MAX_VALUE = Integer.MAX_VALUE;
+    @org.junit.Test
+    public void mathOperators() {
+        int[] arr1 = {Integer.MIN_VALUE, -9823, -100, -1, 0, 1, 100, 89238, Integer.MAX_VALUE};
 
-    public static void main(String[] args) {
-        Random random = new Random();
+        for (int element1 : arr1) {
+            for (int element2 : arr1) {
+                // Comparison operators
+                Assert.assertEquals(Branchless.greaterThan(element1, element2) == -1, element1 > element2);
+                Assert.assertEquals(Branchless.greaterThanOrEqualTo(element1, element2) == -1, element1 >= element2);
+                Assert.assertEquals(Branchless.lessThan(element1, element2) == -1, element1 < element2);
+                Assert.assertEquals(Branchless.lessThanOrEqualTo(element1, element2) == -1, element1 <= element2);
+                Assert.assertEquals(Branchless.equals(element1, element2) == -1, element1 == element2);
 
-        List<Integer> list = IntStream.range(0, NUM_ELEMENTS)
-                .map(i -> random.nextInt(MAX_VALUE))
-                .boxed()
-                .collect(Collectors.toList());
+                // Other math functions
+                Assert.assertEquals(Branchless.min(element1, element2), Math.min(element1, element2));
+                Assert.assertEquals(Branchless.max(element1, element2), Math.max(element1, element2));
+            }
 
-        for (int element : list) {
-            for (int element2 : list) {
-                boolean max1 = Branchless.equals(element, element2) == -1;
-                boolean max2 = element == element2;
-                if (max1 != max2) {
-                    System.out.println("Error");
-                    System.exit(1);
-                }
+            Assert.assertEquals(Branchless.abs(element1), Math.abs(element1));
+        }
+    }
+
+    @org.junit.Test
+    public void daysInMonth() {
+        for (int year = 0; year < 2000; year++) {
+            for (int month = 1; month <= 12; month++) {
+                YearMonth yearMonthObject = YearMonth.of(year, month);
+                int daysInMonth = yearMonthObject.lengthOfMonth();
+                int branchlessDaysInMonth = Branchless.daysInMonth(month, year);
+                Assert.assertEquals(branchlessDaysInMonth, daysInMonth);
             }
         }
-
-        System.out.println("Completed sucessfully");
     }
+
 }

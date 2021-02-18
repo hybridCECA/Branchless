@@ -26,15 +26,37 @@ public class Branchless {
         return ~greaterThan(a, b) & ~greaterThan(b, a);
     }
 
-    public static int max(int a, int b) {
-        int aIsGreater = greaterThan(a, b);
+    public static int conditionalPut(int condition, int passValue, int defaultValue) {
+        return (condition & passValue) | (~condition & defaultValue);
+    }
 
-        return (aIsGreater & a) | (~aIsGreater & b);
+    public static int max(int a, int b) {
+        return conditionalPut(greaterThan(a, b), a, b);
     }
 
     public static int min(int a, int b) {
-        int aIsGreater = greaterThan(a, b);
+        return conditionalPut(greaterThan(b, a), a, b);
+    }
 
-        return (aIsGreater & b) | (~aIsGreater & a);
+    public static int abs(int a) {
+        int isNegative = a >> 31;
+        return conditionalPut(isNegative, -a, a);
+    }
+
+    public static int sign(int a) {
+        int positive = greaterThan(a, 0);
+        int sign = a >> 31;
+
+        return (positive & 1) | (sign);
+    }
+
+    private static int[] dayDifference = new int[12];
+    public static int daysInMonth(int month, int year) {
+        int div25 = year % 25;
+        int divisor2 = (((div25^-div25) >> 31) & -12) + 16;
+        int div = year % divisor2;
+        dayDifference[1] = ((div^-div) >> 31) -1;
+        int monthOffset = (7 - month) >> 31;
+        return 30 + ((month + monthOffset) & 1) + dayDifference[month - 1];
     }
 }
