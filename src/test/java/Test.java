@@ -21,6 +21,7 @@ public class Test {
                 Assert.assertEquals(Branchless.max(element1, element2), Math.max(element1, element2));
             }
 
+            Assert.assertEquals(Branchless.sign(element1), Integer.compare(element1, 0));
             Assert.assertEquals(Branchless.abs(element1), Math.abs(element1));
         }
     }
@@ -35,6 +36,14 @@ public class Test {
                 Assert.assertEquals(branchlessDaysInMonth, daysInMonth);
             }
         }
+    }
+
+    @org.junit.Test
+    public void grade() {
+        for (int i = 0; i < 101; i++) {
+            Assert.assertEquals(Branchless.percentToGrade(i), Basic.percentToGrade(i));
+        }
+
     }
 
 }

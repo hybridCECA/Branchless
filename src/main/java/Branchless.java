@@ -50,13 +50,21 @@ public class Branchless {
         return (positive & 1) | (sign);
     }
 
-    private static int[] dayDifference = new int[12];
     public static int daysInMonth(int month, int year) {
         int div25 = year % 25;
         int divisor2 = (((div25^-div25) >> 31) & -12) + 16;
         int div = year % divisor2;
-        dayDifference[1] = ((div^-div) >> 31) -1;
+        int febMask = month - 2;
+        febMask = ~((febMask^-febMask) >> 31);
         int monthOffset = (7 - month) >> 31;
-        return 30 + ((month + monthOffset) & 1) + dayDifference[month - 1];
+
+        return 30 + ((month + monthOffset) & 1) + ((((div^-div) >> 31) - 1) & febMask);
     }
+
+    // 69: 'E'
+    public static char percentToGrade(int i) {
+        return (char)(69-(((i/10-5)|(i/60-1))-i/100));
+    }
+
+
 }
